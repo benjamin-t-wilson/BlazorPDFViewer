@@ -1,0 +1,118 @@
+﻿@page "/"
+
+@inject IDocumentRepository _documentRepository
+@inject IJSRuntime JS
+@*This can be made into any sort of modal. But if the ID changes, the function "setPageLoading" in helpers.js will need an ID changed too*@
+<p id="loading_modal">Loading...</p>
+
+<section id="my_pdf_viewer">
+    <div id="pdf_window">
+        <ul id="thumbnails">
+            @if (Document != null && Document.PageCount > 0)
+            {
+                foreach (var page in Document.Pages.PagesArray)
+                {
+                    var pageNum = Document.Pages.PagesArray.ToList().IndexOf(page);
+
+                    // JS will add the canvases
+                    <li @onclick="@(() => SetPageNumber(pageNum))">
+                        <div class="thumbnail_canvas_container"></div>
+                    </li>
+                }
+            }
+        </ul>
+        <div id="canvas_container">
+            <canvas id="pdf_renderer" />
+        </div>
+    </div>
+
+    <div id="navigation_controls">
+        <button @onclick="PreviousPage">Previous</button>
+        <input id="current_page" value="@PageNumber" @onchange="(e) => SetPageNumber(int.Parse(e.Value.ToString()))" type="number" />
+        <span>of @(Document != null ? Document.PageCount : 0)</span>
+        <button @onclick="NextPage">Next</button>
+        <button @onclick="ZoomIn">+</button>
+        <button @onclick="ZoomOut">-</button>
+        <button @onclick="(() => Rotate(-90))">⟲</button>
+        <button @onclick="(() => Rotate(90))">⟳</button>
+    </div>
+</section>
+
+@code{
+    private PdfDocument Document;
+    private string DocumentPath;
+    private int PageNumber = 1;
+
+    private bool PageRendered = false;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        await JS.InvokeAsync<Task>("setPageLoading", true);
+
+        if (Document == null)
+        {
+            Document = _documentRepository.GetLocalPdf();
+        }
+
+        if (string.IsNullOrWhiteSpace(DocumentPath))
+        {
+            await SetDocumentPath();
+        }
+
+        if (!PageRendered)
+        {
+            await JS.InvokeAsync<Task>("setPdf", DocumentPath);
+            PageRendered = true;
+        }
+
+        await JS.InvokeAsync<Task>("setPageLoading", false);
+    }
+
+    private async Task SetDocumentPath()
+    {
+        DocumentPath = await JS.InvokeAsync<string>("createPdfDataUrl", Document.ToBase64String());
+        StateHasChanged();
+    }
+
+    private async Task PreviousPage()
+    {
+        PageNumber = await JS.InvokeAsync<int>("previousPage");
+    }
+
+    private async Task NextPage()
+    {
+        PageNumber = await JS.InvokeAsync<int>("nextPage");
+    }
+
+    private async Task ZoomIn()
+    {
+        await JS.InvokeAsync<Task>("zoomIn");
+    }
+
+    private async Task ZoomOut()
+    {
+        await JS.InvokeAsync<Task>("zoomOut");
+    }
+
+    private async Task SetPageNumber(int value)
+    {
+        if (value > 0 && value <= Document.PageCount)
+        {
+            PageNumber = value;
+            await JS.InvokeAsync<Task>("changePageToNumber", value);
+        }
+    }
+
+    private async Task Rotate(int degrees)
+    {
+        await JS.InvokeAsync<Task>("setPageLoading", true); // don't need to set to false, life cycle change handles that
+                                                            // but this operation takes a while, so we should start asap
+
+        var page = Document.Pages[PageNumber - 1];
+        page.Rotate += degrees;
+        await SetDocumentPath();
+        PageRendered = false; //triggers change in life cycle, will set pdf again
+    }
+}
