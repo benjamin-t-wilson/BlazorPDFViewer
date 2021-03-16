@@ -4,24 +4,29 @@
   zoom: 1.5
 };
 
-async function setPdf(url) {
+async function setPdf(
+  url,
+  mainCanvasElementId,
+  thumbnailContainerId,
+  thumbnailCanvasContainerClass
+) {
   pdfjsLib
     .getDocument(url)
     .then(pdf => {
       myState.pdf = pdf;
-      renderPdf();
+      renderPdf(mainCanvasElementId);
     })
     .then(() => {
-      setPageThumbnails();
+      setPageThumbnails(thumbnailContainerId, thumbnailCanvasContainerClass);
     });
 }
 
-function renderPdf() {
+function renderPdf(mainCanvasElementId) {
   myState.pdf.getPage(myState.currentPage).then(page => {
-    const oldCanvas = document.getElementById("pdf_renderer");
+    const oldCanvas = document.getElementById(mainCanvasElementId);
 
     const canvas = document.createElement("canvas");
-    canvas.id = "pdf_renderer";
+    canvas.id = mainCanvasElementId;
 
     oldCanvas.parentNode.appendChild(canvas);
     oldCanvas.parentNode.removeChild(oldCanvas);
@@ -40,9 +45,12 @@ function renderPdf() {
   });
 }
 
-function setPageThumbnails() {
+function setPageThumbnails(
+  thumbnailContainerId,
+  thumbnailCanvasContainerClass
+) {
   let num = 1;
-  const thumbnailContainer = document.getElementById("thumbnails");
+  const thumbnailContainer = document.getElementById(thumbnailContainerId);
 
   while (num <= myState.pdf._pdfInfo.numPages) {
     const safeNum = num;
@@ -50,7 +58,7 @@ function setPageThumbnails() {
       const listItem = thumbnailContainer.children[safeNum];
 
       var canvasContainer = document.createElement("div");
-      canvasContainer.classList.add("thumbnail_canvas_container");
+      canvasContainer.classList.add(thumbnailCanvasContainerClass);
       const canvas = document.createElement("canvas");
 
       listItem.removeChild(listItem.getElementsByTagName("div")[0]);
@@ -73,18 +81,18 @@ function setPageThumbnails() {
   }
 }
 
-function previousPage() {
+function previousPage(currentPageId, mainCanvasElementId) {
   if (myState.pdf == null || myState.currentPage == 1) {
     return;
   }
 
   myState.currentPage -= 1;
-  document.getElementById("current_page").value = myState.currentPage;
-  renderPdf();
+  document.getElementById(currentPageId).value = myState.currentPage;
+  renderPdf(mainCanvasElementId);
   return myState.currentPage;
 }
 
-function nextPage() {
+function nextPage(currentPageId, mainCanvasElementId) {
   if (
     myState.pdf == null ||
     myState.currentPage >= myState.pdf._pdfInfo.numPages
@@ -93,33 +101,24 @@ function nextPage() {
   }
 
   myState.currentPage += 1;
-  document.getElementById("current_page").value = myState.currentPage;
-  renderPdf();
+  document.getElementById(currentPageId).value = myState.currentPage;
+  renderPdf(mainCanvasElementId);
   return myState.currentPage;
 }
 
-function changePageToNumber(desiredPage) {
+function changePageToNumber(desiredPage, currentPageId, mainCanvasElementId) {
   if (desiredPage >= 1 && desiredPage <= myState.pdf._pdfInfo.numPages) {
     myState.currentPage = desiredPage;
-    document.getElementById("current_page").value = desiredPage;
-    renderPdf();
+    document.getElementById(currentPageId).value = desiredPage;
+    renderPdf(mainCanvasElementId);
   }
 }
 
-function zoomIn() {
+function zoom(amount, mainCanvasElementId) {
   if (myState.pdf == null) {
     return;
   }
-  myState.zoom += 0.25;
+  myState.zoom += amount;
 
-  renderPdf();
-}
-
-function zoomOut() {
-  if (myState.pdf == null) {
-    return;
-  }
-  myState.zoom -= 0.25;
-
-  renderPdf();
+  renderPdf(mainCanvasElementId);
 }

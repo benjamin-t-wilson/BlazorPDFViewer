@@ -24,10 +24,10 @@ function createPdfDataUrl(b64Data) {
   );
 }
 
-function setPageLoading(status) {
-  var modal = document.getElementById("loading_modal");
+function setPageLoading(status, loadingModalId, pdfViewerComponentId) {
+    var modal = document.getElementById(loadingModalId);
   modal.style.display = status ? "block" : "none";
 
-  var pdfViewer = document.getElementById("my_pdf_viewer");
+    var pdfViewer = document.getElementById(pdfViewerComponentId);
   pdfViewer.style.display = status ? "none" : "block";
 }

@@ -2,12 +2,23 @@
 
 @inject IDocumentRepository _documentRepository
 @inject IJSRuntime JS
-@*This can be made into any sort of modal. But if the ID changes, the function "setPageLoading" in helpers.js will need an ID changed too*@
-<p id="loading_modal">Loading...</p>
+@*This can be made into any sort of modal. The only thing I do is show/hide whatever has this ID*@
+<p id="@PdfViewerSelectors.LoadingModalId">Loading...</p>
 
-<section id="my_pdf_viewer">
-    <div id="pdf_window">
-        <ul id="thumbnails">
+<section id="@PdfViewerSelectors.PdfViewerComponentId">
+    <div id="@PdfViewerSelectors.NavigationControlsId">
+        <button @onclick="PreviousPage">Previous</button>
+        <input id="@PdfViewerSelectors.CurrentPageInputId" value="@PageNumber" @onchange="(e) => SetPageNumber(int.Parse(e.Value.ToString()))" type="number" />
+        <span>of @(Document != null ? Document.PageCount : 0)</span>
+        <button @onclick="NextPage">Next</button>
+        <button @onclick="ZoomIn">+</button>
+        <button @onclick="ZoomOut">-</button>
+        <button @onclick="(() => Rotate(-90))">⟲</button>
+        <button @onclick="(() => Rotate(90))">⟳</button>
+    </div>
+
+    <div id="@PdfViewerSelectors.PdfWindowId">
+        <ul id="@PdfViewerSelectors.ThumbnailContainerId">
             @if (Document != null && Document.PageCount > 0)
             {
                 foreach (var page in Document.Pages.PagesArray)
@@ -16,25 +27,14 @@
 
                     // JS will add the canvases
                     <li @onclick="@(() => SetPageNumber(pageNum))">
-                        <div class="thumbnail_canvas_container"></div>
+                        <div class="@PdfViewerSelectors.ThumbnailCanvasContainerClass"></div>
                     </li>
                 }
             }
         </ul>
-        <div id="canvas_container">
-            <canvas id="pdf_renderer" />
+        <div id="@PdfViewerSelectors.MainCanvasContainerId">
+            <canvas id="@PdfViewerSelectors.MainCanvasId" />
         </div>
-    </div>
-
-    <div id="navigation_controls">
-        <button @onclick="PreviousPage">Previous</button>
-        <input id="current_page" value="@PageNumber" @onchange="(e) => SetPageNumber(int.Parse(e.Value.ToString()))" type="number" />
-        <span>of @(Document != null ? Document.PageCount : 0)</span>
-        <button @onclick="NextPage">Next</button>
-        <button @onclick="ZoomIn">+</button>
-        <button @onclick="ZoomOut">-</button>
-        <button @onclick="(() => Rotate(-90))">⟲</button>
-        <button @onclick="(() => Rotate(90))">⟳</button>
     </div>
 </section>
 
@@ -49,7 +49,7 @@
     {
         base.OnAfterRender(firstRender);
 
-        await JS.InvokeAsync<Task>("setPageLoading", true);
+        await JS.InvokeAsync<Task>("setPageLoading", true, PdfViewerSelectors.LoadingModalId, PdfViewerSelectors.PdfViewerComponentId);
 
         if (Document == null)
         {
@@ -63,11 +63,11 @@
 
         if (!PageRendered)
         {
-            await JS.InvokeAsync<Task>("setPdf", DocumentPath);
+            await JS.InvokeAsync<Task>("setPdf", DocumentPath, PdfViewerSelectors.MainCanvasId, PdfViewerSelectors.ThumbnailContainerId, PdfViewerSelectors.ThumbnailCanvasContainerClass);
             PageRendered = true;
         }
 
-        await JS.InvokeAsync<Task>("setPageLoading", false);
+        await JS.InvokeAsync<Task>("setPageLoading", false, PdfViewerSelectors.LoadingModalId, PdfViewerSelectors.PdfViewerComponentId);
     }
 
     private async Task SetDocumentPath()
@@ -78,22 +78,22 @@
 
     private async Task PreviousPage()
     {
-        PageNumber = await JS.InvokeAsync<int>("previousPage");
+        PageNumber = await JS.InvokeAsync<int>("previousPage", PdfViewerSelectors.CurrentPageInputId, PdfViewerSelectors.MainCanvasId);
     }
 
     private async Task NextPage()
     {
-        PageNumber = await JS.InvokeAsync<int>("nextPage");
+        PageNumber = await JS.InvokeAsync<int>("nextPage", PdfViewerSelectors.CurrentPageInputId, PdfViewerSelectors.MainCanvasId);
     }
 
     private async Task ZoomIn()
     {
-        await JS.InvokeAsync<Task>("zoomIn");
+        await JS.InvokeAsync<Task>("zoom", 0.25, PdfViewerSelectors.MainCanvasId);
     }
 
     private async Task ZoomOut()
     {
-        await JS.InvokeAsync<Task>("zoomOut");
+        await JS.InvokeAsync<Task>("zoom", -0.25, PdfViewerSelectors.MainCanvasId);
     }
 
     private async Task SetPageNumber(int value)
@@ -101,14 +101,15 @@
         if (value > 0 && value <= Document.PageCount)
         {
             PageNumber = value;
-            await JS.InvokeAsync<Task>("changePageToNumber", value);
+            await JS.InvokeAsync<Task>("changePageToNumber", value, PdfViewerSelectors.CurrentPageInputId, PdfViewerSelectors.MainCanvasId);
         }
     }
 
     private async Task Rotate(int degrees)
     {
-        await JS.InvokeAsync<Task>("setPageLoading", true); // don't need to set to false, life cycle change handles that
-                                                            // but this operation takes a while, so we should start asap
+        await JS.InvokeAsync<Task>("setPageLoading", true, PdfViewerSelectors.LoadingModalId, PdfViewerSelectors.PdfViewerComponentId);
+        // don't need to set to false, life cycle change handles that
+        // but this operation takes a while, so we should start asap
 
         var page = Document.Pages[PageNumber - 1];
         page.Rotate += degrees;

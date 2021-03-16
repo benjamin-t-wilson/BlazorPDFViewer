@@ -23,7 +23,7 @@ html, body {
         top: 0.5rem;
     }
 
-#pdf_window {
+#PdfWindow {
     max-width: 100%;
     max-height: 700px;
     overflow: auto;
@@ -33,7 +33,7 @@ html, body {
     display: flex;
 }
 
-#thumbnails {
+#ThumbnailContainer {
     list-style: none;
     padding: 30px;
     overflow: auto;
@@ -41,15 +41,15 @@ html, body {
     height: 100%;
 }
 
-#canvas_container {
+#CanvasContainer {
     margin: 0 auto;
     max-width: 80%;
 }
 
-#navigation_controls input {
+#NavigationControls input {
     max-width: 70px;
 }
 
-#loading_modal {
+#LoadingModal {
     display: none;
 }
