@@ -7,12 +7,12 @@
 
 <section id="@PdfViewerSelectors.PdfViewerComponentId">
     <div id="@PdfViewerSelectors.NavigationControlsId">
-        <button @onclick="PreviousPage">Previous</button>
+        <button id="@PdfViewerSelectors.PreviousPageButtonId" @onclick="PreviousPage">Previous</button>
         <input id="@PdfViewerSelectors.CurrentPageInputId" value="@PageNumber" @onchange="(e) => SetPageNumber(int.Parse(e.Value.ToString()))" type="number" />
         <span>of @(Document != null ? Document.PageCount : 0)</span>
-        <button @onclick="NextPage">Next</button>
-        <button @onclick="ZoomIn">+</button>
-        <button @onclick="ZoomOut">-</button>
+        <button id="@PdfViewerSelectors.NextPageButtonId" @onclick="NextPage">Next</button>
+        <button id="@PdfViewerSelectors.ZoomInButtonId" @onclick="ZoomIn">+</button>
+        <button id="@PdfViewerSelectors.ZoomOutButtonId" @onclick="ZoomOut">-</button>
         <button @onclick="(() => Rotate(-90))">⟲</button>
         <button @onclick="(() => Rotate(90))">⟳</button>
     </div>

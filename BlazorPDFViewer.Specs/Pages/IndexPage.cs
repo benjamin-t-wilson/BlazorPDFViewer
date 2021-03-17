@@ -15,9 +15,12 @@ namespace BlazorPDFViewer.Specs.Pages
 
         public IWebElement LoadingModal => webDriver.FindElement(By.Id(PdfViewerSelectors.LoadingModalId));
         public IWebElement PdfWindow => webDriver.FindElement(By.Id(PdfViewerSelectors.PdfWindowId));
-        public IWebElement NextPageButton => webDriver.FindElement(By.CssSelector("#NavigationControls > button:nth-child(4)"));
+        public IWebElement NextPageButton => webDriver.FindElement(By.Id(PdfViewerSelectors.NextPageButtonId));
         public IWebElement PageIndex => webDriver.FindElement(By.Id(PdfViewerSelectors.CurrentPageInputId));
         public IEnumerable<IWebElement> Thumbnails => webDriver.FindElements(By.ClassName(PdfViewerSelectors.ThumbnailCanvasContainerClass));
+        public IWebElement ZoomInButton => webDriver.FindElement(By.Id(PdfViewerSelectors.ZoomInButtonId));
+        public IWebElement ZoomOutButton => webDriver.FindElement(By.Id(PdfViewerSelectors.ZoomOutButtonId));
+        public IWebElement MainCanvas => webDriver.FindElement(By.Id(PdfViewerSelectors.MainCanvasId));
 
         public void OpenIndexPage()
         {

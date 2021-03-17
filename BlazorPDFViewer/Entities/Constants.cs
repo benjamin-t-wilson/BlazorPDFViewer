@@ -13,6 +13,10 @@
             public const string CurrentPageInputId = "CurrentPage";
             public const string LoadingModalId = "LoadingModal";
             public const string NavigationControlsId = "NavigationControls";
+            public const string NextPageButtonId = "NextPage";
+            public const string PreviousPageButtonId = "PreviousPage";
+            public const string ZoomInButtonId = "ZoomIn";
+            public const string ZoomOutButtonId = "ZoomOut";
         }
     }
 }
