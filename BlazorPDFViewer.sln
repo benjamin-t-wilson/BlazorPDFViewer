@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPDFViewer", "BlazorPDFViewer\BlazorPDFViewer.csproj", "{686005A1-2162-47E2-9724-F6755F9F27A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPDFViewer", "BlazorPDFViewer\BlazorPDFViewer.csproj", "{686005A1-2162-47E2-9724-F6755F9F27A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPDFViewer.Specs", "BlazorPDFViewer.Specs\BlazorPDFViewer.Specs.csproj", "{AC6B7BBF-90FB-4046-8ADD-781CC2DAFC39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{686005A1-2162-47E2-9724-F6755F9F27A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{686005A1-2162-47E2-9724-F6755F9F27A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{686005A1-2162-47E2-9724-F6755F9F27A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC6B7BBF-90FB-4046-8ADD-781CC2DAFC39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6B7BBF-90FB-4046-8ADD-781CC2DAFC39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6B7BBF-90FB-4046-8ADD-781CC2DAFC39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6B7BBF-90FB-4046-8ADD-781CC2DAFC39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
