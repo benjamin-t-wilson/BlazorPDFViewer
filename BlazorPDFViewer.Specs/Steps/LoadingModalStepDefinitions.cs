@@ -19,7 +19,7 @@ namespace BlazorPDFViewer.Specs.Steps
         [Given(@"I open the index page")]
         public void GivenIOpenTheIndexPage()
         {
-            ActionWaits.PageWait(() => _indexPage.OpenIndexPage());
+            _indexPage.OpenIndexPage();
         }
 
         [Then(@"A loading modal shows while I wait")]

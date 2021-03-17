@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using BlazorPDFViewer.Specs.Common;
+using OpenQA.Selenium;
 using System.Collections.Generic;
 using static BlazorPDFViewer.Entities.Constants;
 
@@ -7,10 +8,13 @@ namespace BlazorPDFViewer.Specs.Pages
     public class IndexPage
     {
         private readonly IWebDriver webDriver;
+        private readonly string PdfViewerAddress;
 
         public IndexPage(IWebDriver webDriver)
         {
             this.webDriver = webDriver;
+            var config = new Configuration().InitConfiguration();
+            PdfViewerAddress = config["PdfViewerAddress"];
         }
 
         public IWebElement LoadingModal => webDriver.FindElement(By.Id(PdfViewerSelectors.LoadingModalId));
@@ -21,10 +25,11 @@ namespace BlazorPDFViewer.Specs.Pages
         public IWebElement ZoomInButton => webDriver.FindElement(By.Id(PdfViewerSelectors.ZoomInButtonId));
         public IWebElement ZoomOutButton => webDriver.FindElement(By.Id(PdfViewerSelectors.ZoomOutButtonId));
         public IWebElement MainCanvas => webDriver.FindElement(By.Id(PdfViewerSelectors.MainCanvasId));
+        public IWebElement RotateCWButton => webDriver.FindElement(By.Id(PdfViewerSelectors.RotateCWButtonId));
 
         public void OpenIndexPage()
         {
-            webDriver.Navigate().GoToUrl(@"https://localhost:5001/");
+            webDriver.Navigate().GoToUrl(PdfViewerAddress);
         }
     }
 }

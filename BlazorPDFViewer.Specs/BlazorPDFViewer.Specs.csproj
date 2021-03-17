@@ -7,7 +7,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="appsettings.test.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="appsettings.test.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="ExtentReports.Core" Version="1.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
 		<PackageReference Include="nunit" Version="3.13.1" />
 		<PackageReference Include="NUnit3TestAdapter" Version="3.17.0">
 			<PrivateAssets>all</PrivateAssets>

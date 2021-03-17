@@ -13,8 +13,8 @@
         <button id="@PdfViewerSelectors.NextPageButtonId" @onclick="NextPage">Next</button>
         <button id="@PdfViewerSelectors.ZoomInButtonId" @onclick="ZoomIn">+</button>
         <button id="@PdfViewerSelectors.ZoomOutButtonId" @onclick="ZoomOut">-</button>
-        <button @onclick="(() => Rotate(-90))">⟲</button>
-        <button @onclick="(() => Rotate(90))">⟳</button>
+        <button id="@PdfViewerSelectors.RotateCCWButtonId" @onclick="(() => Rotate(-90))">⟲</button>
+        <button id="@PdfViewerSelectors.RotateCWButtonId" @onclick="(() => Rotate(90))">⟳</button>
     </div>
 
     <div id="@PdfViewerSelectors.PdfWindowId">

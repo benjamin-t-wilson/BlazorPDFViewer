@@ -17,6 +17,8 @@
             public const string PreviousPageButtonId = "PreviousPage";
             public const string ZoomInButtonId = "ZoomIn";
             public const string ZoomOutButtonId = "ZoomOut";
+            public const string RotateCWButtonId = "RotateCW";
+            public const string RotateCCWButtonId = "RotateCCW";
         }
     }
 }
