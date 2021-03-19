@@ -15,6 +15,8 @@
         <button id="@PdfViewerSelectors.ZoomOutButtonId" @onclick="ZoomOut">-</button>
         <button id="@PdfViewerSelectors.RotateCCWButtonId" @onclick="(() => Rotate(-90))">⟲</button>
         <button id="@PdfViewerSelectors.RotateCWButtonId" @onclick="(() => Rotate(90))">⟳</button>
+        <a id="@PdfViewerSelectors.DownloadAnchorId" href="@DocumentPath" download>Download</a>
+        <button id="@PdfViewerSelectors.PrintButtonId" @onclick="(() => Print())">Print</button>
     </div>
 
     <div id="@PdfViewerSelectors.PdfWindowId">
@@ -115,5 +117,10 @@
         page.Rotate += degrees;
         await SetDocumentPath();
         PageRendered = false; //triggers change in life cycle, will set pdf again
+    }
+
+    private async Task Print()
+    {
+        await JS.InvokeAsync<Task>("printPdf", DocumentPath);
     }
 }

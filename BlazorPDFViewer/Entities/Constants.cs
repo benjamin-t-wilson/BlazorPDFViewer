@@ -19,6 +19,8 @@
             public const string ZoomOutButtonId = "ZoomOut";
             public const string RotateCWButtonId = "RotateCW";
             public const string RotateCCWButtonId = "RotateCCW";
+            public const string DownloadAnchorId = "DownloadPdf";
+            public const string PrintButtonId = "PrintPdf";
         }
     }
 }
